@@ -1,5 +1,4 @@
 # README #
-
 processring is the name of the project for the operative systems course in 2016-1.
 
 ### What is this repository for? ###
@@ -10,4 +9,4 @@ processring is the name of the project for the operative systems course in 2016-
 
 ### Who do I talk to? ###
 
-* ssuarez6@eafit.edu.co ; dvelas26@eafit.edu.co ; aotalva1@eafit.edu.co%  
+* ssuarez6@eafit.edu.co ; dvelas26@eafit.edu.co ; aotalva1@eafit.edu.co%
