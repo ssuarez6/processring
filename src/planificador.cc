@@ -33,6 +33,11 @@ int main(int argc, char** argv){
 	cout << "Asignando " << argv[optind] << " hilos al proceso " << optarg << endl;
 	ts = atoi(argv[optind]);
 	ns = atoi(optarg);
+	//el numero de hilos no puede ser mayor a 10
+	if (ns > 10){
+	  cout << "Error, el numero de hilos no puede ser mayor a 10\n";
+	  exit(1);
+	}
 	threadspcp[ns] = ts;
       }else{
 	cout << "No se ha asignado el numero de procesos\n" <<
