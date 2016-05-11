@@ -15,8 +15,8 @@ struct Estadistica {
 };
 
 struct Mensaje{
-	unsigned nTareas;
-	unsigned nEstadisticas;
-	Tarea tareas[nTareas];
-	Estadistica estadisticas[nEstadisticas];
+	int nTareas;
+	int nEstadisticas;
+	Tarea tareas[];
+	Estadistica estadisticas[];
 };

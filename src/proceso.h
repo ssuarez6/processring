@@ -7,5 +7,4 @@ class Proceso {
 			void setMensaje(Mensaje* m);
 			Mensaje* getMensaje();
 			virtual void procesarMensaje();
-}
-
+};
