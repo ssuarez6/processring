@@ -5,7 +5,13 @@
 #include <cstdlib> //para el atoi
 #include <cstdio>
 
+#define IN 0
+#define OUT 1
+
 pid_t fork(void); //para mejor documentacion: pid_t
+
+typedef int Tub[2];
+
 using namespace std;
 
 
@@ -67,36 +73,37 @@ int main(int argc, char** argv){
   * el cual siempre debe ser creado.
   */
   pid_t plp;
-  if( (plp = fork()) < 0 ){ //se hace el proceso hijo
-    cerr << "Ocurrio un error al crear el nuevo proceso\n";
-  }else if (plp == 0){//proceso creado
+  Tub tubs[pcps]; //tuberias como pcps hayan
+  for(int i=0; i<pcps; ++i) pipe(tubs[i]); //inicializar pipes
+  if (plp == 0){//proceso creado
     //aqui se hace un exec para el plp
     cout << "PLP: He sido creado\n";
-  }else{ //proceso principal
-    cout << "A punto de crear el anillo\n";
-    for(int i=0; i<pcps; ++i){ //hacer fork per proceso
+    dup2(tubs[0][IN], STDIN_FILENO);
+    dup2(tubs[0][OUT], STDOUT_FILENO);
+    for(int i=0; i<pcps; ++i) {
+      close(tubs[i][0]);
+      close(tubs[i][1]);
+    }//cerrando pipes
+  }else{ //planificador
+    for(int i=0; i<pcps; ++i){ //hacer fork por proceso
       cout << "Creando el PCP #" << i << endl;
       pid_t pcp;
-      //creando tuberia
-      int tub[2];
-      pipe(tub);
       pcp = fork();
       if (pcp == 0){   //"hijo"
-        //dup2(tub[0], STDERR_FILENO);
-        //dup2(tub[1], STDOUT_FIRENO);
-        //close(tub[0]); close(tub[1]);
-        cout << "PCP #" << i << ": He sido creado" << endl;
-        char is[2];
-        char ts[2];
+        dup2(tubs[i][IN], STDIN_FILENO); //dups
+        dup2(tubs[i][OUT], STDOUT_FILENO);
+        for(j=0;j<pcps;++j){
+          close(tubs[j][0]);
+          close(tubs[j][1]);
+        } //cerrar tubs
+        char is[2], ts[2];
         sprintf(is, "%d", i);
         sprintf(ts, "%d", threadspcp[i]);
-        /*cout <<"Argumentos: " << *is << " " << *ts << endl;*/
         if(execl("./pcp", "pcp", "-i", is, "-t", ts, NULL ) == -1){
             cout << "ERROR en el exec" << endl;
             break;
         }
       }else{
-        //SHO
         //dup2(tub[1], STDERR_FILENO);
         //close(tub[0]); close(tub[1]);
       }

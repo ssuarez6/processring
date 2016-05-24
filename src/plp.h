@@ -6,4 +6,5 @@ class Plp : Proceso{
 			~Plp();
 			void initMensaje();
 			void generarTareas();
+			int genRndmTareas();
 }
