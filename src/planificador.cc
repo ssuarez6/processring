@@ -78,20 +78,20 @@ int main(int argc, char** argv){
   if (plp == 0){//proceso creado
     //aqui se hace un exec para el plp
     cout << "PLP: He sido creado\n";
-    dup2(tubs[0][IN], STDIN_FILENO);
-    dup2(tubs[0][OUT], STDOUT_FILENO);
+    dup2(tubs[0][IN], STDOUT_FILENO);
+    dup2(tubs[pcps-1][OUT], STDIN_FILENO);
     for(int i=0; i<pcps; ++i) {
       close(tubs[i][0]);
       close(tubs[i][1]);
     }//cerrando pipes
   }else{ //planificador
-    for(int i=0; i<pcps; ++i){ //hacer fork por proceso
+    for(int i=1; i<pcps; ++i){ //hacer fork por proceso
       cout << "Creando el PCP #" << i << endl;
       pid_t pcp;
       pcp = fork();
       if (pcp == 0){   //"hijo"
-        dup2(tubs[i][IN], STDIN_FILENO); //dups
-        dup2(tubs[i][OUT], STDOUT_FILENO);
+        dup2(tubs[i][IN], STDOUT_FILENO); //dups
+        dup2(tubs[i-1][OUT], STDIN_FILENO);
         for(j=0;j<pcps;++j){
           close(tubs[j][0]);
           close(tubs[j][1]);

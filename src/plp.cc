@@ -1,6 +1,9 @@
 #include "plp.h"
 #include <time.h>
 #include <stdlib.h>
+#include <iostream>
+
+using namespace std;
 
 int Plp::genRndTareas(){
 	int tareas;
@@ -10,5 +13,9 @@ int Plp::genRndTareas(){
 }
 
 void Plp::initMensaje(){
-	
+
+}
+
+int main(){
+		cerr << "PLP creado\n";
 }
