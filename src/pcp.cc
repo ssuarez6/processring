@@ -52,4 +52,9 @@ int main(int argc, char* argv[]){
 		exit(1);
 	}
 	me = new Pcp(id, hilos);
+	cout << id;
+	cerr << "Recibiendo numero en PCP #" << id << endl;
+	int n=-1;
+	cin >> n;
+	cerr << "Numero recibido: (-1 si error)" << n << endl;
 }

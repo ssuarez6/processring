@@ -92,7 +92,7 @@ int main(int argc, char** argv){
       if (pcp == 0){   //"hijo"
         dup2(tubs[i][IN], STDOUT_FILENO); //dups
         dup2(tubs[i-1][OUT], STDIN_FILENO);
-        for(j=0;j<pcps;++j){
+        for(int j=0;j<pcps;++j){
           close(tubs[j][0]);
           close(tubs[j][1]);
         } //cerrar tubs
