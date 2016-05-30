@@ -70,22 +70,22 @@ int main(int argc, char** argv){
 	 */
 	pid_t plp;
 	Tub tubs[pcps+1]; //tuberias como pcps hayan
-	for(int i=0; i<pcps; ++i) pipe(tubs[i]); //inicializar pipes
+	for(int i=0; i<=pcps; ++i) pipe(tubs[i]); //inicializar pipes
 	if ((plp=fork()) == 0){//proceso creado
 		//aqui se hace un exec para el plp
-		dup2(tubs[0][IN], STDOUT_FILENO);
-		dup2(tubs[pcps][OUT], STDIN_FILENO);
+		dup2(tubs[0][OUT], STDOUT_FILENO);
+		dup2(tubs[pcps][IN], STDIN_FILENO);
 		execl("./plp", "plp", NULL);
 		for(int i=0; i<=pcps; ++i) {
 			close(tubs[i][0]);
 			close(tubs[i][1]);
 		}//cerrando pipes
 	}else{ //planificador
-		for(int i=0; i<pcps; ++i){ //hacer fork por proceso
+		for(int i=1; i<=pcps; ++i){ //hacer fork por proceso
 			pid_t pcp;
 			if ((pcp=fork()) == 0){   //"hijo"
-				dup2(tubs[i+1][IN], STDOUT_FILENO); //dups
-				dup2(tubs[i][OUT], STDIN_FILENO);
+				dup2(tubs[i][OUT], STDOUT_FILENO); //dups
+				dup2(tubs[i-1][IN], STDIN_FILENO);
 				for(int j=0;j<pcps;++j){
 					close(tubs[j][0]);
 					close(tubs[j][1]);

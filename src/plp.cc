@@ -23,5 +23,4 @@ int main(){
 	cout << 0 << endl;
 	int n=-1;
 	cin >> n;
-	cerr << "Numero recibido (-1 si error) " << n << endl;
 }
