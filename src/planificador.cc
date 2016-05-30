@@ -49,7 +49,9 @@ int main(int argc, char** argv){
 				}
 				break;
 			default: //en caso de que no se ingrese una opcion valida
-				cout << "No se reconoce la opcion ingresada. Utilice -n para asignar el numero de procesos, y Utilice -t para asignar el numero de hilos a cada proceso." << endl;
+				cout << "No se reconoce la opcion ingresada. Utilice -n para " <<
+								"asignar el numero de procesos, y Utilice -t para asignari" <<
+								" el numero de hilos a cada proceso." << endl;
 				break;
 		}
 	}
@@ -65,26 +67,25 @@ int main(int argc, char** argv){
 	/*
 	 * Ahora, empezamos a crear el anillo.
 	 * Primero se crea un proceso de tipo plp
-	 * el cual siempre debe ser creado.
 	 */
 	pid_t plp;
-	Tub tubs[pcps]; //tuberias como pcps hayan
+	Tub tubs[pcps+1]; //tuberias como pcps hayan
 	for(int i=0; i<pcps; ++i) pipe(tubs[i]); //inicializar pipes
-	if (plp == 0){//proceso creado
+	if ((plp=fork()) == 0){//proceso creado
 		//aqui se hace un exec para el plp
 		dup2(tubs[0][IN], STDOUT_FILENO);
-		dup2(tubs[pcps-1][OUT], STDIN_FILENO);
-		for(int i=0; i<pcps; ++i) {
+		dup2(tubs[pcps][OUT], STDIN_FILENO);
+		execl("./plp", "plp", NULL);
+		for(int i=0; i<=pcps; ++i) {
 			close(tubs[i][0]);
 			close(tubs[i][1]);
 		}//cerrando pipes
 	}else{ //planificador
-		for(int i=1; i<pcps; ++i){ //hacer fork por proceso
+		for(int i=0; i<pcps; ++i){ //hacer fork por proceso
 			pid_t pcp;
-			pcp = fork();
-			if (pcp == 0){   //"hijo"
-				dup2(tubs[i][IN], STDOUT_FILENO); //dups
-				dup2(tubs[i-1][OUT], STDIN_FILENO);
+			if ((pcp=fork()) == 0){   //"hijo"
+				dup2(tubs[i+1][IN], STDOUT_FILENO); //dups
+				dup2(tubs[i][OUT], STDIN_FILENO);
 				for(int j=0;j<pcps;++j){
 					close(tubs[j][0]);
 					close(tubs[j][1]);

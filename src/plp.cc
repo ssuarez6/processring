@@ -20,10 +20,7 @@ void Plp::procesarMensaje(){}
 
 int main(){
 	Plp* me = new Plp();
-	cerr << "PLP creado\n";
-	cerr << "El PLP va a mandar un numero al siguiente." << endl;
-	cout << 4 << endl;
-	cerr << "Recibiendo el id del ultimo pcp" << endl;
+	cout << 0 << endl;
 	int n=-1;
 	cin >> n;
 	cerr << "Numero recibido (-1 si error) " << n << endl;

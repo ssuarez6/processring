@@ -39,27 +39,23 @@ int main(int argc, char* argv[]){
 	cerr << "Recibiendo numero en PCP #" << me->getId() << endl;
 	int n=-1;
 	cin >> n;
-	cerr << "Numero recibido: (-1 si error)" << n << endl;
+	cerr << "Numero recibido: (-1 si error) " << n << endl;
 }
 
 Pcp* parseArgs(int argc, char*argv[]){
 	/* Se recibe el argumento para determinar
 	 * el numero de hilos que se van a usar
 	 */
-
 	extern char* optarg;
 	extern int optind, opterr, optopt;
 	int option, id=-1, hilos;
 	Pcp* me;
-	cerr << "Antes del while\n";
 	while((option = getopt(argc, argv, "i:t:"))!=-1){
 		switch(option){
 			case 'i':
-				cerr << "Asignando id al pcp." << endl;
 				id = atoi(optarg);
 				break;
 			case 't':
-				cerr << "Asignando threads al pcp" << endl;
 				hilos = atoi(optarg);
 				break;
 		}
