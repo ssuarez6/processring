@@ -13,6 +13,5 @@ void Proceso::imprimirMensaje(){
 }
 
 Mensaje* Proceso::leerMensaje(){
-	Mensaje* m = NULL;
-	return m;
+	return 0;
 }
