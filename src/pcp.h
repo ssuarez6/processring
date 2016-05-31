@@ -1,7 +1,7 @@
 #include "proceso.h"
 #include <pthread.h>
 
-class Pcp : Proceso{
+class Pcp : public Proceso{
 	private:
 		int id;
 		int nHilos;
