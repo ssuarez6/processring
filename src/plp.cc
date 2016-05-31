@@ -7,7 +7,6 @@
 
 using namespace std;
 
-bool Plp::end = false;
 
 int Plp::genRndmTareas(){
 	srand (time(NULL));
@@ -36,8 +35,12 @@ Tarea* Plp::generarTareas(int nTareas){
 		std::memcpy(t.tareaAEjecutar,tmp.str().c_str(),MAX_TEXT_AREA);
 		t.procesoId = -1;
 		t.hiloId = -1;
+		cout << "Definida tarea # " << i << "\n A Ejecutar: " 
+			<< t.tareaAEjecutar << endl;
 		tareas[i] = t;
 	}
+	cout << "PLP ha generado " << nTareas << " tareas.\n";
+	return tareas; //this generates a warning(?)
 }
 void Plp::procesarMensaje(){
 	Mensaje* mensaje = this->getMensaje();
@@ -45,8 +48,8 @@ void Plp::procesarMensaje(){
 		if(!mensaje->tareas[i].asignado){ // Condición de fin, esto o id's de procesos?
 			break;
 		}
-		this->end = true;
 	}
+	this->terminoTareas = true;
 }
 
 int main(){
@@ -54,5 +57,7 @@ int main(){
 	int nTareas = me->genRndmTareas();
 	Tarea* tareas = me->generarTareas(nTareas);
 	me->initMensaje(nTareas,tareas);
+	me->printMessagetoErr();
 	me->procesarMensaje();
 }
+
