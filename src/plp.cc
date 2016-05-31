@@ -15,13 +15,13 @@ int Plp::genRndmTareas(){
 }
 
 void Plp::initMensaje(int nTareas, Tarea* tareas){
-	Estadistica* estadisticas[nTareas];
-	Mensaje* mensaje;
-	mensaje->nTareas = nTareas;
-	mensaje->nEstadisticas = nTareas;
-	std::memcpy(mensaje->tareas,tareas,nTareas);
-	std::memcpy(mensaje->estadisticas,estadisticas,nTareas);
-	this->setMensaje(mensaje);
+	Estadistica estadisticas[nTareas];
+	Mensaje mensaje;
+	mensaje.nTareas = nTareas;
+	mensaje.nEstadisticas = -1;
+	std::memcpy(mensaje.tareas,tareas,nTareas);
+	std::memcpy(mensaje.estadisticas,estadisticas,nTareas);
+	this->setMensaje(&mensaje);
 }
 
 Tarea* Plp::generarTareas(int nTareas){
@@ -35,11 +35,8 @@ Tarea* Plp::generarTareas(int nTareas){
 		std::memcpy(t.tareaAEjecutar,tmp.str().c_str(),MAX_TEXT_AREA);
 		t.procesoId = -1;
 		t.hiloId = -1;
-		cout << "Definida tarea # " << i << "\n A Ejecutar: " 
-			<< t.tareaAEjecutar << endl;
 		tareas[i] = t;
 	}
-	cout << "PLP ha generado " << nTareas << " tareas.\n";
 	return tareas; //this generates a warning(?)
 }
 void Plp::procesarMensaje(){
