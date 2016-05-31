@@ -31,6 +31,7 @@ void Pcp::verificarEstadoHilos(){
 
 void Pcp::procesarMensaje(){
 	//proceso el mensaje lalalala
+	
 }
 
 int main(int argc, char* argv[]){

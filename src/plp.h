@@ -1,6 +1,6 @@
 #include "proceso.h"
 
-class Plp : Proceso{
+class Plp : public Proceso{
 public:
 	void initMensaje();
 	void generarTareas();
