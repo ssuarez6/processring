@@ -1,5 +1,7 @@
 #include "proceso.h"
 #include <unistd.h>
+#include <iostream>
+using namespace std;
 void Proceso::setMensaje(Mensaje* m){
 	this->mensaje = m;
 }
@@ -22,7 +24,7 @@ void Proceso::imprimirMensaje(){
 				sizeof(Estadistica));
 }
 
-Mensaje* Proceso::leerMensaje(){
+void Proceso::leerMensaje(){
 	Mensaje* m;
 	while(read(STDIN_FILENO, m, sizeof(Mensaje))>0){
 		read(STDIN_FILENO,&(m->nTareas), sizeof(m->nTareas));
@@ -39,6 +41,11 @@ Mensaje* Proceso::leerMensaje(){
 					sizeof(Estadistica));
 		}
 	}
-	return m;
+	this->setMensaje(m);
+}
 
+void Proceso::printMessagetoErr(){
+	cerr << "Tareas del mensaje: " << mensaje->nTareas << endl;
+	cerr << "Contenido de la tarea del mensaje: " << mensaje->tareas[0].tareaAEjecutar << endl;
+	cerr << "La tarea esta asignada?: " << mensaje->tareas[0].asignado << endl;
 }

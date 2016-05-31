@@ -1,48 +1,58 @@
 #include "plp.h"
-//#include <time.h>
+#include <time.h>
 #include <stdlib.h>
 #include <iostream>
-#include <string.h>
+#include <cstring>
+#include <sstream>
+
 using namespace std;
 
+bool Plp::end = false;
+
 int Plp::genRndmTareas(){
-	return -1;
+	srand (time(NULL));
+	int n = rand() % 255 + 3;
+	return n;
 }
 
-void Plp::initMensaje(){
+void Plp::initMensaje(int nTareas, Tarea* tareas){
+	Estadistica* estadisticas[nTareas];
+	Mensaje* mensaje;
+	mensaje->nTareas = nTareas;
+	mensaje->nEstadisticas = nTareas;
+	std::memcpy(mensaje->tareas,tareas,nTareas);
+	std::memcpy(mensaje->estadisticas,estadisticas,nTareas);
+	this->setMensaje(mensaje);
+}
+
+Tarea* Plp::generarTareas(int nTareas){
+	Tarea tareas [nTareas];
+	for (int i = 0; i < nTareas; ++i){
+		int n = rand() % 6 + 1;
+		Tarea t;
+		t.asignado = false;
+		ostringstream  tmp;
+		tmp << "tarea0" << n;
+		std::memcpy(t.tareaAEjecutar,tmp.str().c_str(),MAX_TEXT_AREA);
+		t.procesoId = -1;
+		t.hiloId = -1;
+		tareas[i] = t;
+	}
+}
+void Plp::procesarMensaje(){
 	Mensaje* mensaje = this->getMensaje();
-
-	Tarea* t;
-	t->asignado = true;
-	char texto[64] = "una tarea a ejecutar";
-	memcpy(t->tareaAEjecutar, texto, strlen(texto)+1);
-	t->procesoId = 0;
-	t->hiloId = -1;
-
-	Estadistica* e;
-	memcpy(e->tareaAEjecutar, texto, strlen(texto)+1);
-	e->procesoId = 0;
-	e->hiloId = -1;
-
-	mensaje->nTareas = 1;
-	mensaje->nEstadisticas = 1;
-	mensaje->tareas[mensaje->nTareas];
-	mensaje->estadisticas[mensaje->nEstadisticas];
-	mensaje->tareas[0] = *t;
-	mensaje->estadisticas[0] = *e;
+	for (int i = 0; i < mensaje->nTareas; ++i){
+		if(!mensaje->tareas[i].asignado){ // Condición de fin, esto o id's de procesos?
+			break;
+		}
+		this->end = true;
+	}
 }
-
-void Plp::generarTareas(){
-
-}
-void Plp::procesarMensaje(){}
 
 int main(){
 	Plp* me = new Plp();
-	me->initMensaje();
-	me->printMessagetoErr();
-	me->imprimirMensaje();
-	me->leerMensaje();
-	me->printMessagetoErr();
-	return 0;
+	int nTareas = me->genRndmTareas();
+	Tarea* tareas = me->generarTareas(nTareas);
+	me->initMensaje(nTareas,tareas);
+	me->procesarMensaje();
 }

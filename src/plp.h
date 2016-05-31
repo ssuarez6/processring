@@ -2,10 +2,12 @@
 
 class Plp : public Proceso{
 public:
-	void initMensaje();
-	void generarTareas();
+	void initMensaje(int nTareas, Tarea* t);
+	Tarea* generarTareas(int nTareas);
 	int genRndmTareas();
 	void procesarMensaje();
+private:
+	static bool end;
 };
 
 /**

@@ -7,6 +7,7 @@ class Proceso {
 		void setMensaje(Mensaje* m);
 		Mensaje* getMensaje();
 		void imprimirMensaje();
-		Mensaje* leerMensaje();
+		void leerMensaje();
 		virtual void procesarMensaje()=0;
+		void printMessagetoErr();
 };
