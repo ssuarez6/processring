@@ -1,27 +1,58 @@
 #include "plp.h"
-//#include <time.h>
+#include <time.h>
 #include <stdlib.h>
 #include <iostream>
+#include <cstring>
+#include <sstream>
 
 using namespace std;
 
+bool Plp::end = false;
+
 int Plp::genRndmTareas(){
-	return -1;
+	srand (time(NULL));
+	int n = rand() % 255 + 3;
+	return n;
 }
 
-void Plp::initMensaje(){
-
+void Plp::initMensaje(int nTareas, Tarea* tareas){
+	Estadistica* estadisticas[nTareas];
+	Mensaje* mensaje;
+	mensaje->nTareas = nTareas;
+	mensaje->nEstadisticas = nTareas;
+	std::memcpy(mensaje->tareas,tareas,nTareas);
+	std::memcpy(mensaje->estadisticas,estadisticas,nTareas);
+	this->setMensaje(mensaje);
 }
 
-void Plp::generarTareas(){
-
+Tarea* Plp::generarTareas(int nTareas){
+	Tarea tareas [nTareas];
+	for (int i = 0; i < nTareas; ++i){
+		int n = rand() % 6 + 1;
+		Tarea t;
+		t.asignado = false;
+		ostringstream  tmp;
+		tmp << "tarea0" << n;
+		std::memcpy(t.tareaAEjecutar,tmp.str().c_str(),MAX_TEXT_AREA);
+		t.procesoId = -1;
+		t.hiloId = -1;
+		tareas[i] = t;
+	}
 }
-void Plp::procesarMensaje(){}
+void Plp::procesarMensaje(){
+	Mensaje* mensaje = this->getMensaje();
+	for (int i = 0; i < mensaje->nTareas; ++i){
+		if(!mensaje->tareas[i].asignado){ // Condición de fin, esto o id's de procesos?
+			break;
+		}
+		this->end = true;
+	}
+}
 
 int main(){
 	Plp* me = new Plp();
-	cout << 0 << endl;
-	int n=-1;
-	cin >> n;
-	cerr << "Numero recibido (-1 si error) " << n << endl;
+	int nTareas = me->genRndmTareas();
+	Tarea* tareas = me->generarTareas(nTareas);
+	me->initMensaje(nTareas,tareas);
+	me->procesarMensaje();
 }
