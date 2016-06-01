@@ -7,6 +7,34 @@ using namespace std;
 //para manejar los argumentos
 Pcp* parseArgs(int argc, char* argv[]);
 
+void Pcp::inicializarHilos(){
+	for(int i=0; i<nHilos; ++i){
+		Hilo h = new Hilo(i);
+		h.ejecutar();
+		hilos[i] = h;
+	}
+}
+
+void Pcp::procesarMensaje(){
+	int hiloT = hiloTerminado();
+	while(hiloT > -1){
+		Estadistica e = hiloT.genEstadistica();
+		Mensaje* m = this->getMensaje();
+		m->estadisticas[hilos[hiloT].getTareaId()] = e;
+		this->setMensaje(m);
+		hilos[hiloT].setDisponible();
+		hiloT = hiloTerminado();
+	}
+	int hiloD = hiloDisponible();
+	if(hiloId<0) return;
+	for(int i=0; i<*(this->getMensaje).nTareas and hiloId>-1; ++i){
+		if(!((this->getMensaje)->tareas[i].asignado)){
+			hilos[hiloId].asignarTarea((this->getMensaje)->tareas[i], i);
+		}
+		hiloId = hiloDisponible();
+	}
+}
+
 void Pcp::setValues(int id, int nHilos){
 	this->id = id;
 	this->nHilos = nHilos;
