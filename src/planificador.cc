@@ -50,8 +50,8 @@ int main(int argc, char** argv){
 				break;
 			default: //en caso de que no se ingrese una opcion valida
 				cout << "No se reconoce la opcion ingresada. Utilice -n para " <<
-								"asignar el numero de procesos, y Utilice -t para asignari" <<
-								" el numero de hilos a cada proceso." << endl;
+					"asignar el numero de procesos, y Utilice -t para asignari" <<
+					" el numero de hilos a cada proceso." << endl;
 				break;
 		}
 	}
@@ -61,7 +61,7 @@ int main(int argc, char** argv){
 	 */
 	if (pcps < 0){
 		pcps = 3;
-		for (int i=0; i<3; ++i) threadspcp[i] = 3;
+		for (int i=1; i<=3; ++i) threadspcp[i] = 3;
 	}
 
 	/*
@@ -72,7 +72,6 @@ int main(int argc, char** argv){
 	Tub tubs[pcps+1]; //tuberias como pcps hayan
 	for(int i=0; i<=pcps; ++i) pipe(tubs[i]); //inicializar pipes
 	if ((plp=fork()) == 0){//proceso creado
-		//aqui se hace un exec para el plp
 		dup2(tubs[0][OUT], STDOUT_FILENO);
 		dup2(tubs[pcps][IN], STDIN_FILENO);
 		execl("./plp", "plp", NULL);

@@ -60,6 +60,7 @@ void* ejecutarTarea(void* hilo){
 		}
 		//cerr << "Ya tengo tarea asignada \n";
 		char* tareas_dir = getenv("PLN_DIR_TAREAS");
+		cerr << tareas_dir << endl;
 		strcat(tareas_dir, "/");
 		strcat(tareas_dir, (h->getTarea())->tareaAEjecutar);
 		execl(tareas_dir, (h->getTarea())->tareaAEjecutar, NULL);
