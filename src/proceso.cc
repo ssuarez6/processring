@@ -25,3 +25,8 @@ bool Proceso::esHoraDeTerminar(){
 	}
 	return true;
 }
+
+void Proceso::imprimirMensaje(){
+	Mensaje* m = this->getMensaje();
+	write(1, &(m->nTareas), sizeof(&(m->nTareas)));
+}

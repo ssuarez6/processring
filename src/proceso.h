@@ -9,4 +9,6 @@ class Proceso {
 		virtual void procesarMensaje()=0;
 		void printMessagetoErr();
 		bool esHoraDeTerminar();
+		void imprimirMensaje();
+		void leerMensaje();
 };
