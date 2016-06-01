@@ -10,9 +10,8 @@ class Pcp : public Proceso{
 		int nHilos;
 		Hilo hilos[MAX_THREADS];
 	public:
+		Pcp();
 		void setValues(int id, int nHilos);
-		void asignarTarea(int nHilo, Tarea* t);
-		void verificarEstadoHilos(); //determina si ya terminaron las tareas de cada hilo
 		int getId();
 		int getNHilos();
 		void procesarMensaje();

@@ -9,8 +9,8 @@ Pcp* parseArgs(int argc, char* argv[]);
 
 void Pcp::inicializarHilos(){
 	for(int i=0; i<nHilos; ++i){
-		Hilo h = new Hilo(i);
-		h.ejecutar();
+		Hilo h = *(new Hilo(i));
+		h.ejecutar("algun path");
 		hilos[i] = h;
 	}
 }
@@ -18,18 +18,18 @@ void Pcp::inicializarHilos(){
 void Pcp::procesarMensaje(){
 	int hiloT = hiloTerminado();
 	while(hiloT > -1){
-		Estadistica e = hiloT.genEstadistica();
+		Estadistica e = hilos[hiloT].genEstadistica(this->getId());
 		Mensaje* m = this->getMensaje();
 		m->estadisticas[hilos[hiloT].getTareaId()] = e;
 		this->setMensaje(m);
 		hilos[hiloT].setDisponible();
 		hiloT = hiloTerminado();
 	}
-	int hiloD = hiloDisponible();
+	int hiloId = hiloDisponible();
 	if(hiloId<0) return;
-	for(int i=0; i<*(this->getMensaje).nTareas and hiloId>-1; ++i){
-		if(!((this->getMensaje)->tareas[i].asignado)){
-			hilos[hiloId].asignarTarea((this->getMensaje)->tareas[i], i);
+	for(int i=0; i<(*(this->getMensaje())).nTareas and hiloId>-1; ++i){
+		if(!((this->getMensaje())->tareas[i].asignado)){
+			hilos[hiloId].asignarTarea((this->getMensaje())->tareas[i], i);
 		}
 		hiloId = hiloDisponible();
 	}
@@ -47,19 +47,6 @@ int Pcp::getId(){
 
 int Pcp::getNHilos(){
 	return this->nHilos;
-}
-
-void Pcp::asignarTarea(int nHilo, Tarea* t){
-	//asignar la tarea al hilo lalalala
-}
-
-void Pcp::verificarEstadoHilos(){
-	//verificar el estado de los hilos lalalala
-}
-
-void Pcp::procesarMensaje(){
-	//proceso el mensaje lalalala
-
 }
 
 int main(int argc, char* argv[]){

@@ -1,3 +1,4 @@
+#pragma once
 const int MAX_TAREAS=256;
 const int MAX_TEXT_AREA=64;
 
