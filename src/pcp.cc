@@ -36,7 +36,9 @@ void Pcp::procesarMensaje(){
 
 int main(int argc, char* argv[]){
 	Pcp* me = parseArgs(argc, argv);
-	me->leerMensaje();	
+	Mensaje m;
+	read(0, &m, sizeof(Mensaje));
+	me->setMensaje(&m);
 	me->printMessagetoErr(); 
 	return 0;
 }

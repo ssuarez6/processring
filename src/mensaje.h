@@ -17,6 +17,6 @@ struct Estadistica {
 struct Mensaje{
 	int nTareas;
 	int nEstadisticas;
-	Tarea tareas[];
-	Estadistica estadisticas[];
+	Tarea tareas[MAX_TAREAS];
+	Estadistica estadisticas[MAX_TAREAS];
 };
