@@ -25,10 +25,10 @@ void Plp::initMensaje(int nTareas){
 		t.asignado = false;
 		stringstream  tmp;
 		tmp << "tarea0" << n;
-		memcpy(t.tareaAEjecutar, tmp.str().c_str(), 7*sizeof(char));
-		memcpy(e.tareaAEjecutar, tmp.str().c_str(), 7*sizeof(char));
-		t.procesoId = -1; e.procesoId = -1;
-		t.hiloId = -1; e.hiloId = -1;
+		memcpy(t.tareaAEjecutar, tmp.str().c_str(), sizeof(tmp.str().c_str()));
+		memcpy(e.tareaAEjecutar, tmp.str().c_str(), sizeof(tmp.str().c_str()));
+		t.procesoId = 0; e.procesoId = 0;
+		t.hiloId = 0; e.hiloId = 0;
 		mensaje.tareas[i] = t;
 		mensaje.estadisticas[i] = e;
 	}
@@ -39,15 +39,9 @@ void Plp::initMensaje(int nTareas){
 
 
 void Plp::procesarMensaje(){
-	Mensaje* mensaje = this->getMensaje();
-	int tareasEjecutadas = 0;
-	for (int i = 0; i < mensaje->nEstadisticas; ++i){
-		if(mensaje->estadisticas[i].procesoId > -1 and 
-			mensaje->estadisticas[i].hiloId > -1)
-			++tareasEjecutadas;
-	}
-	if(tareasEjecutadas == mensaje->nTareas)
-		this->terminoTareas = true;
+	if(esHoraDeTerminar()){
+		cerr << "YA ACABO!!!\n" << endl;
+	}	
 }
 
 int main(){
@@ -56,11 +50,12 @@ int main(){
 	me->initMensaje(nTareas);
 	write(1, me->getMensaje(), sizeof(Mensaje));
 	//me->printMessagetoErr(); //para debuggear
-	while(!terminoTareas){
+	while(!me->esHoraDeTerminar()){
 		Mensaje m;
 		read(0, &m, sizeof(Mensaje));
 		me->setMensaje(&m);
 		me->procesarMensaje();
+		write(1, me->getMensaje(), sizeof(Mensaje));
 	}
 	cerr << "Todas las tareas se han ejecutado y terminado." << endl;
 	//me->printMessagetoErr();

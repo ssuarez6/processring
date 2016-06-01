@@ -6,22 +6,22 @@ private:
 	bool terminado = false;
 	bool disponible = true;
 	pthread_t h;
-	sem_t *mutex;
 	Tarea t;
 	int tarea_id, id;
-	char* rutaATarea;
 public:
 	Hilo(int id);
+	sem_t mutex;
 	void reset();
 	void suicidar();
 	void asignarTarea(Tarea t, int id_tarea);
 //	void* ejecutarTarea(void*);
-	void ejecutar(char* rutaATarea);
+	void ejecutar();
 	Estadistica genEstadistica(int procesoID);
 	int getTareaId();
 	void setDisponible();
-	sem_t* getMutex();
 	void setTareaId(int t);
 	void setTerminado(bool t);
+	bool getDisponible();
+	bool getTerminado();
 	Tarea* getTarea();
 };

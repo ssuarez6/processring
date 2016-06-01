@@ -31,7 +31,7 @@ int main(int argc, char** argv){
 			case 'n':
 				pcps = atoi(optarg); //convierte char* en int
 				n_is_used = true;
-				for (int i=0; i<pcps; ++i) threadspcp[i] = 3;
+				for (int i=1; i<=pcps; ++i) threadspcp[i] = 3;
 				break;
 			case 't': // para cuando asignen los hijos
 				//se controla que se haya usado el -n previamente

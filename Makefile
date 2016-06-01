@@ -6,7 +6,7 @@ EXECS=$(BIN)/pcp $(BIN)/plp $(BIN)/planificador
 all: $(EXECS)
 
 $(BIN)/pcp: $(SRC)/pcp.cc $(SRC)/proceso.cc $(SRC)/hilo.cc
-	g++ -o pcp $^ -lpthread -lrt
+	g++ -o pcp $^ -lrt -pthread
 	mv pcp $(BIN)
 
 $(BIN)/plp: $(SRC)/plp.cc $(SRC)/proceso.cc

@@ -2,14 +2,21 @@
 #include <cstring>
 #include <unistd.h>
 #include <stdlib.h>
+#include <iostream>
+using namespace std;
 Hilo::Hilo(int id){
 	this->id = id;
 	this->tarea_id = -1;
-	sem_init(mutex, 0, 1);
+	cerr << "Inicializado el hilo# " << id << endl;
+	sem_init(&mutex, 0, 1);
 }
 
 Tarea* Hilo::getTarea(){
 	return &(this->t);
+}
+
+bool Hilo::getTerminado(){
+	return this->terminado;
 }
 
 void Hilo::setTerminado(bool t){
@@ -24,12 +31,12 @@ void Hilo::setTareaId(int t){
 	this->tarea_id = t;
 }
 
-sem_t* Hilo::getMutex(){
-	return this->mutex;
-}
-
 void Hilo::setDisponible(){
 	this->disponible = true;
+}
+
+bool Hilo::getDisponible(){
+	return this->disponible;
 }
 
 void Hilo::suicidar(){
@@ -47,23 +54,24 @@ void* ejecutarTarea(void* hilo){
 	while(true){
 		bool tieneTarea = false;
 		while(!tieneTarea){
-			sem_wait(h->getMutex());
+			sem_wait(&(h->mutex));
 			tieneTarea = h->getTareaId() > -1 ? true : false;
-			sem_post(h->getMutex());
+			sem_post(&(h->mutex));
 		}
+		cerr << "Ya tengo tarea asignada \n";
 		char* tareas_dir = getenv("PLN_DIR_TAREAS");
 		strcat(tareas_dir, "/");
 		strcat(tareas_dir, (h->getTarea())->tareaAEjecutar);
 		execl(tareas_dir, (h->getTarea())->tareaAEjecutar, NULL);
+		cerr << "Acabo de terminar la tarea\n";
 		h->setTerminado(true);
-		sem_wait(h->getMutex());
+		sem_wait(&(h->mutex));
 		h->setTareaId(-1);
-		sem_post(h->getMutex());
+		sem_post(&(h->mutex));
 	}
 }
 
-void Hilo::ejecutar(char* rutaATarea){
-	this->rutaATarea = rutaATarea;
+void Hilo::ejecutar(){
 	pthread_create(&(this->h), NULL, ejecutarTarea, this);
 }
 
@@ -78,9 +86,8 @@ Estadistica Hilo::genEstadistica(int procesoId){
 }
 
 void Hilo::asignarTarea(Tarea t, int id_tarea){
+	sem_wait(&mutex);
 	this->tarea_id = id_tarea;
-	sem_wait(mutex);
-	this->tarea_id = id_tarea;
-	sem_post(mutex);
+	sem_post(&mutex);
 	this->disponible = false;
 }

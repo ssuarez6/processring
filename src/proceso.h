@@ -8,4 +8,5 @@ class Proceso {
 		Mensaje* getMensaje();
 		virtual void procesarMensaje()=0;
 		void printMessagetoErr();
+		bool esHoraDeTerminar();
 };

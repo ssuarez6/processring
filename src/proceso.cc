@@ -17,3 +17,11 @@ void Proceso::printMessagetoErr(){
 			<< (*mensaje).tareas[i].tareaAEjecutar << endl;
 	}
 }
+
+bool Proceso::esHoraDeTerminar(){
+	for(int i=0; i<mensaje->nTareas; ++i){
+		if(mensaje->estadisticas[i].hiloId == 0)
+			return false;
+	}
+	return true;
+}

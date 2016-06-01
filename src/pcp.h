@@ -8,9 +8,8 @@ class Pcp : public Proceso{
 	private:
 		int id;
 		int nHilos;
-		Hilo hilos[MAX_THREADS];
+		Hilo* hilos[MAX_THREADS];
 	public:
-		Pcp();
 		void setValues(int id, int nHilos);
 		int getId();
 		int getNHilos();
