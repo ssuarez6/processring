@@ -69,17 +69,19 @@ int Pcp::getNHilos(){
 
 int main(int argc, char* argv[]){
 	Pcp* me = parseArgs(argc, argv);
-	cerr << "Tengo " << me->getNHilos() << " hilos.\n";
+//	cerr << "Tengo " << me->getNHilos() << " hilos.\n";
 	me->inicializarHilos();
 	Mensaje m;
 	read(0, &m, sizeof(Mensaje));
 	me->setMensaje(&m);
 	while(!me->esHoraDeTerminar()){
+//		cerr << "Todavia no es hora de terminar\n";
 		me->procesarMensaje();
 		write(1, me->getMensaje(), sizeof(Mensaje));
 		Mensaje m;
 		read(0, &m, sizeof(Mensaje));
 	}
+//	cerr << "El PLP# " << me->getId() << " ha terminado" << endl;
 //	me->printMessagetoErr(); 
 	return 0;
 }

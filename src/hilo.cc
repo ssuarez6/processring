@@ -7,7 +7,7 @@ using namespace std;
 Hilo::Hilo(int id){
 	this->id = id;
 	this->tarea_id = -1;
-	cerr << "Inicializado el hilo# " << id << endl;
+	//cerr << "Inicializado el hilo# " << id << endl;
 	sem_init(&mutex, 0, 1);
 }
 
@@ -58,12 +58,12 @@ void* ejecutarTarea(void* hilo){
 			tieneTarea = h->getTareaId() > -1 ? true : false;
 			sem_post(&(h->mutex));
 		}
-		cerr << "Ya tengo tarea asignada \n";
+		//cerr << "Ya tengo tarea asignada \n";
 		char* tareas_dir = getenv("PLN_DIR_TAREAS");
 		strcat(tareas_dir, "/");
 		strcat(tareas_dir, (h->getTarea())->tareaAEjecutar);
 		execl(tareas_dir, (h->getTarea())->tareaAEjecutar, NULL);
-		cerr << "Acabo de terminar la tarea\n";
+		//cerr << "Acabo de terminar la tarea\n";
 		h->setTerminado(true);
 		sem_wait(&(h->mutex));
 		h->setTareaId(-1);

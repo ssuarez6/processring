@@ -48,6 +48,7 @@ int main(){
 	Plp* me = new Plp();
 	int nTareas = me->genRndmTareas();
 	me->initMensaje(nTareas);
+	//cerr << me->getMensaje()->nTareas << endl;
 	write(1, me->getMensaje(), sizeof(Mensaje));
 	//me->printMessagetoErr(); //para debuggear
 	while(!me->esHoraDeTerminar()){
