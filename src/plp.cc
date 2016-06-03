@@ -46,7 +46,7 @@ void Plp::initMensaje(int nTareas){
 void Plp::procesarMensaje(){
 	if(esHoraDeTerminar()){
 		cerr << "YA ACABO!!!\n" << endl;
-	}	
+	}
 }
 
 int main(){
@@ -60,10 +60,11 @@ int main(){
 //		cerr << "Entre al while en plp\n";
 		me->leerMensaje();
 		cerr << n << " vez que el mensaje vuelve\n";
+		++n;
 		me->procesarMensaje();
 		me->imprimirMensaje();
 	}
 	cerr << "Todas las tareas se han ejecutado y terminado." << endl;
-	
+
 	return 0;
 }

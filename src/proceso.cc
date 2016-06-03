@@ -13,16 +13,20 @@ Mensaje* Proceso::getMensaje(){
 
 void Proceso::printMessagetoErr(){
 	for (int i=0; i<(*mensaje).nTareas; ++i){
-		cerr << "Tarea #" << i << ". A Ejecutar: " 
+		cerr << "Tarea #" << i << ". A Ejecutar: "
 			<< (*mensaje).tareas[i].tareaAEjecutar << endl;
+		cerr << "Estadistica #" << i << " HiloID" << (*mensaje).estadisticas[i].hiloId << endl;
+		cerr << "ProcesoID: " << (*mensaje).estadisticas[i].procesoId << endl;
 	}
 }
 
 bool Proceso::esHoraDeTerminar(){
+	printMessagetoErr();
 	for(int i=0; i<mensaje->nTareas; ++i){
-		if(mensaje->estadisticas[i].hiloId == 0)
+		if(mensaje->estadisticas[i].procesoId == 0)
 			return false;
 	}
+	cerr << "Ya es hora de terminar\n";
 	return true;
 }
 

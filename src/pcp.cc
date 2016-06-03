@@ -29,7 +29,7 @@ Pcp* parseArgs(int argc, char*argv[]){
 		exit(1);
 	}
 	me->setValues(id,hilos);
-	return me;	
+	return me;
 }
 
 void Pcp::inicializarHilos(){
@@ -58,7 +58,25 @@ int Pcp::hiloTerminado(){
 }
 
 void Pcp::procesarMensaje(){
-	
+	imprimirEstadoHilos();
+	int hiloId = hiloDisponible();
+	Mensaje m = *(this->getMensaje());
+	if(hiloId<0) return;
+	for(int i=0; i<m.nTareas and hiloId>-1; ++i){
+		cerr << "Hilo disponible: " << hiloId << endl;
+		if(!(m.tareas[i].asignado)){
+			cerr << "La tarea " << i << "no tiene asignacion" << endl;
+			hilos[hiloId]->asignarTarea(m.tareas[i], i);
+			m.tareas[i].asignado = true;
+			m.tareas[i].procesoId = id;
+			m.tareas[i].hiloId = hiloId;
+			cerr << "Asigne " << m.tareas[i].tareaAEjecutar <<
+				" al hilo " << hiloId;
+		}
+		hiloId = hiloDisponible();
+		cerr << "Proximo hilo: " << hiloId << endl;
+	}
+
 	int hiloT = hiloTerminado();
 	while(hiloT > -1){
 		Estadistica e = hilos[hiloT]->genEstadistica(this->getId());
@@ -69,24 +87,7 @@ void Pcp::procesarMensaje(){
 		hilos[hiloT]->setDisponible();
 		hiloT = hiloTerminado();
 	}
-	int hiloId = hiloDisponible();
-	Mensaje m = *(this->getMensaje());
-	cerr << "Hilo disponible: " << hiloId << endl;
-	if(hiloId<0) return;
-	for(int i=0; i<m.nTareas and hiloId>-1; ++i){
-		cerr << "Hilo disponible: " << hiloId << endl;
-		if(!(m.tareas[i].asignado)){
-			cerr << "La tarea " << i << "no tiene asignacion" << endl;
-			hilos[hiloId]->asignarTarea(m.tareas[i], i);
-			m.tareas[i].asignado = true;
-			m.tareas[i].procesoId = id;
-			m.tareas[i].hiloId = hiloId;
-			cerr << "Asigne " << m.tareas[i].tareaAEjecutar << 
-				" al hilo " << hiloId;
-		}
-		hiloId = hiloDisponible();
-		cerr << "Proximo hilo: " << hiloId << endl;
-	}
+
 }
 
 void Pcp::setValues(int id, int nHilos){
@@ -105,7 +106,17 @@ int Pcp::getNHilos(){
 
 void Pcp::matarHilos(){
 	for(int i=0; i<nHilos; ++i)
-		hilos[i]->suicidar();	
+		hilos[i]->suicidar();
+}
+
+void Pcp::imprimirEstadoHilos(){
+	for(int i=0; i<nHilos; ++i){
+		cerr << "Hilo #" << hilos[i]->getId()
+		<< endl << "Terminado? " << hilos[i]->getTerminado()
+		<< endl << "Disponible? " << hilos[i]->getDisponible()
+		<< endl << "Tarea a ejecutar: " << hilos[i]->getTarea()->tareaAEjecutar
+		<< endl;
+	}
 }
 
 int main(int argc, char* argv[]){
@@ -113,6 +124,7 @@ int main(int argc, char* argv[]){
 	me->inicializarHilos();
 	me->leerMensaje();
 	//me->printMessagetoErr();
+	//me->imprimirEstadoHilos();
 	while(!me->esHoraDeTerminar()){
 		me->procesarMensaje();
 		cerr << "procesé el mensaje" << endl;
@@ -120,7 +132,7 @@ int main(int argc, char* argv[]){
 		cerr << "imprimi el mensaje" << endl;
 		me->leerMensaje();
 		cerr << "lei una vez" << endl;
-		me->printMessagetoErr();
+		//me->printMessagetoErr();
 	}
 	cerr << "El PCP#" << me->getId() << " ha terminado su ejecución\n";
 	cerr << "Matando hilos: " << endl;
