@@ -9,7 +9,6 @@ Hilo::Hilo(int id){
 	this->tarea_id = -1;
 	this->terminado = false;
 	this->disponible = true;
-	cerr << "Soy el hilo " << id << " y estoy disponible." << endl;
 	sem_init(&mutex, 0, 1);
 }
 
@@ -52,14 +51,17 @@ void Hilo::reset(){
 }
 
 void* ejecutarTarea(void* hilo){
+	cerr << "Al principio del metodo\n";
 	Hilo *h;
-	h= static_cast<Hilo *>(hilo);
-	cerr << "EjecutarTarea. hilo id: " << h->getId() << endl;
-	cerr << "Tarea que está en el hilo: " << h->getTarea()->tareaAEjecutar << endl;
+	cerr << "Tratando de hacer static_cast" << endl;
+	h=static_cast<Hilo *>(hilo);
+	cerr << "Hilo ID: " << h->getId() << endl
+		<< "Tarea_ID: " << h->getTareaId() << endl
+		<< "Disponible? " << h->getDisponible() << endl
+		<< "Terminado? " << h->getTerminado() << endl;
 	while(true){
 		bool tieneTarea = false;
 		while(!tieneTarea){
-			//cerr << "Id del hilo: " << h->getId() << endl;
 			sem_wait(&(h->mutex));
 			tieneTarea = h->getTareaId() > -1 ? true : false;
 			sem_post(&(h->mutex));
@@ -83,7 +85,9 @@ void Hilo::ejecutar(){
 //	cerr << "Antes de llamar el pthread_create, hilo id: " << this->getId() << endl; 
 	void* p;
 	p = this;
-	pthread_create(&h, NULL, ejecutarTarea, p);
+	cerr << "Numero devuelto por pthread_create" << endl;
+	cerr << pthread_create(&h, NULL, ejecutarTarea, p);
+	cerr << endl;
 }
 
 
@@ -99,7 +103,6 @@ Estadistica Hilo::genEstadistica(int procesoId){
 void Hilo::asignarTarea(Tarea t, int id_tarea){
 	sem_wait(&mutex);
 	cerr << "Soy el hilo# " << id << " Me asignaron " << t.tareaAEjecutar << endl;
-	cerr << "Me asignaron la tarea: " << id_tarea;
 	cerr << endl;
 	this->tarea_id = id_tarea;
 	this->t = t;

@@ -26,6 +26,11 @@ int main(int argc, char** argv){
 	int pcps = -1;
 	bool n_is_used = false;
 	map<int, int> threadspcp;
+	if (argc == 1){
+		cout << "Use -n para asignar pcp's y -t para asignar hilos a cada pcp."
+			<< endl;
+		return 1;
+	}
 	while((option = getopt(argc, argv, "n:t:")) != -1){
 		switch(option){
 			case 'n':
@@ -52,6 +57,7 @@ int main(int argc, char** argv){
 				cout << "No se reconoce la opcion ingresada. Utilice -n para " <<
 					"asignar el numero de procesos, y Utilice -t para asignari" <<
 					" el numero de hilos a cada proceso." << endl;
+				return 1;
 				break;
 		}
 	}

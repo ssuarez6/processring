@@ -51,25 +51,27 @@ int Pcp::hiloDisponible(){
 int Pcp::hiloTerminado(){
 	for(int i=0; i<nHilos; ++i){
 		if(hilos[i]->getTerminado())
-	//		cerr << "El hilo " << i << " ha terminado" << endl;
+			cerr << "El hilo " << i << " ha terminado" << endl;
 			return i;
 	}
 	return -1;
 }
 
 void Pcp::procesarMensaje(){
+	
 	int hiloT = hiloTerminado();
-	cerr << "Hilo terminado: " << hiloT << endl;
 	while(hiloT > -1){
 		Estadistica e = hilos[hiloT]->genEstadistica(this->getId());
 		Mensaje* m = this->getMensaje();
-		m->estadisticas[hilos[hiloT]->getTareaId()] = e;
+		int eId = hilos[hiloT]->getTareaId();
+		m->estadisticas[eId] = e;
 		this->setMensaje(m);
 		hilos[hiloT]->setDisponible();
 		hiloT = hiloTerminado();
 	}
 	int hiloId = hiloDisponible();
 	Mensaje m = *(this->getMensaje());
+	cerr << "Hilo disponible: " << hiloId << endl;
 	if(hiloId<0) return;
 	for(int i=0; i<m.nTareas and hiloId>-1; ++i){
 		cerr << "Hilo disponible: " << hiloId << endl;
@@ -108,16 +110,17 @@ void Pcp::matarHilos(){
 
 int main(int argc, char* argv[]){
 	Pcp* me = parseArgs(argc, argv);
-	cerr << "Tengo " << me->getNHilos() << " hilos." << endl;
 	me->inicializarHilos();
 	me->leerMensaje();
 	//me->printMessagetoErr();
-	cerr << "Antes del while del pcp\n";
 	while(!me->esHoraDeTerminar()){
-		me->printMessagetoErr();
 		me->procesarMensaje();
+		cerr << "procesé el mensaje" << endl;
 		me->imprimirMensaje();
+		cerr << "imprimi el mensaje" << endl;
 		me->leerMensaje();
+		cerr << "lei una vez" << endl;
+		me->printMessagetoErr();
 	}
 	cerr << "El PCP#" << me->getId() << " ha terminado su ejecución\n";
 	cerr << "Matando hilos: " << endl;
