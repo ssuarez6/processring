@@ -78,7 +78,7 @@ int Hilo::getId(){
 
 void Hilo::ejecutar(){
 	void* p;
-	p = this;
+	p = static_cast<void*>(this);
 	pthread_create(&h, NULL, ejecutarTarea, p);
 }
 
