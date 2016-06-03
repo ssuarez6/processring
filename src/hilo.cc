@@ -7,7 +7,9 @@ using namespace std;
 Hilo::Hilo(int id){
 	this->id = id;
 	this->tarea_id = -1;
-	//cerr << "Inicializado el hilo# " << id << endl;
+	this->terminado = false;
+	this->disponible = true;
+	cerr << "Soy el hilo " << id << " y estoy disponible." << endl;
 	sem_init(&mutex, 0, 1);
 }
 
@@ -16,7 +18,7 @@ Tarea* Hilo::getTarea(){
 }
 
 bool Hilo::getTerminado(){
-	return this->terminado;
+	return terminado;
 }
 
 void Hilo::setTerminado(bool t){
@@ -36,7 +38,7 @@ void Hilo::setDisponible(){
 }
 
 bool Hilo::getDisponible(){
-	return this->disponible;
+	return disponible;
 }
 
 void Hilo::suicidar(){
@@ -50,21 +52,22 @@ void Hilo::reset(){
 }
 
 void* ejecutarTarea(void* hilo){
-	Hilo *h = (Hilo *)hilo;
+	Hilo *h;
+	h= static_cast<Hilo *>(hilo);
+	cerr << "EjecutarTarea. hilo id: " << h->getId() << endl;
+	cerr << "Tarea que está en el hilo: " << h->getTarea()->tareaAEjecutar << endl;
 	while(true){
 		bool tieneTarea = false;
 		while(!tieneTarea){
+			//cerr << "Id del hilo: " << h->getId() << endl;
 			sem_wait(&(h->mutex));
 			tieneTarea = h->getTareaId() > -1 ? true : false;
 			sem_post(&(h->mutex));
 		}
-		//cerr << "Ya tengo tarea asignada \n";
 		char* tareas_dir = getenv("PLN_DIR_TAREAS");
-		cerr << tareas_dir << endl;
 		strcat(tareas_dir, "/");
 		strcat(tareas_dir, (h->getTarea())->tareaAEjecutar);
-		execl(tareas_dir, (h->getTarea())->tareaAEjecutar, NULL);
-		//cerr << "Acabo de terminar la tarea\n";
+		int s = execl(tareas_dir, (h->getTarea())->tareaAEjecutar, NULL);
 		h->setTerminado(true);
 		sem_wait(&(h->mutex));
 		h->setTareaId(-1);
@@ -72,8 +75,15 @@ void* ejecutarTarea(void* hilo){
 	}
 }
 
+int Hilo::getId(){
+	return id;
+}
+
 void Hilo::ejecutar(){
-	pthread_create(&(this->h), NULL, ejecutarTarea, this);
+//	cerr << "Antes de llamar el pthread_create, hilo id: " << this->getId() << endl; 
+	void* p;
+	p = this;
+	pthread_create(&h, NULL, ejecutarTarea, p);
 }
 
 
@@ -88,7 +98,11 @@ Estadistica Hilo::genEstadistica(int procesoId){
 
 void Hilo::asignarTarea(Tarea t, int id_tarea){
 	sem_wait(&mutex);
+	cerr << "Soy el hilo# " << id << " Me asignaron " << t.tareaAEjecutar << endl;
+	cerr << "Me asignaron la tarea: " << id_tarea;
+	cerr << endl;
 	this->tarea_id = id_tarea;
+	this->t = t;
 	sem_post(&mutex);
 	this->disponible = false;
 }

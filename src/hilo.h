@@ -3,14 +3,15 @@
 #include "mensaje.h"
 class Hilo{
 private:
-	bool terminado = false;
-	bool disponible = true;
+	bool terminado;
+	bool disponible;
 	pthread_t h;
 	Tarea t;
 	int tarea_id, id;
 public:
 	Hilo(int id);
 	sem_t mutex;
+	int getId();
 	void reset();
 	void suicidar();
 	void asignarTarea(Tarea t, int id_tarea);

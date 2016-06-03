@@ -18,4 +18,5 @@ class Pcp : public Proceso{
 		int hiloTerminado();
 		int hiloDisponible();
 		void setDisponible();
+		void matarHilos();
 };

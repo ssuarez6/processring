@@ -13,7 +13,7 @@ $(BIN)/plp: $(SRC)/plp.cc $(SRC)/proceso.cc
 	g++ -g -o plp $^
 	mv plp $(BIN)
 
-$(BIN)/planificador: $(SRC)/*.cc
+$(BIN)/planificador: $(SRC)/planificador.cc
 	g++ -g -o planificador $(SRC)/planificador.cc
 	mv planificador $(BIN)
 

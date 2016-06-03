@@ -9,6 +9,11 @@
 
 using namespace std;
 
+
+Plp::Plp(){
+	terminoTareas = false;
+}
+
 int Plp::genRndmTareas(){
 	srand (time(NULL));
 	int n = rand() % MAX_TAREAS + 3;
@@ -46,20 +51,19 @@ void Plp::procesarMensaje(){
 
 int main(){
 	Plp* me = new Plp();
-	int nTareas = me->genRndmTareas();
+	//int nTareas = me->genRndmTareas();
+	int nTareas = 3;
 	me->initMensaje(nTareas);
-	//cerr << me->getMensaje()->nTareas << endl;
-	write(1, me->getMensaje(), sizeof(Mensaje));
-	//me->printMessagetoErr(); //para debuggear
+	me->imprimirMensaje();
+	int n = 1;
 	while(!me->esHoraDeTerminar()){
-		Mensaje m;
-		read(0, &m, sizeof(Mensaje));
-		me->setMensaje(&m);
+//		cerr << "Entre al while en plp\n";
+		me->leerMensaje();
+		cerr << n << " vez que el mensaje vuelve\n";
 		me->procesarMensaje();
-		write(1, me->getMensaje(), sizeof(Mensaje));
+		me->imprimirMensaje();
 	}
 	cerr << "Todas las tareas se han ejecutado y terminado." << endl;
-	//me->printMessagetoErr();
 	
 	return 0;
 }

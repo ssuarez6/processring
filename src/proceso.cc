@@ -28,5 +28,29 @@ bool Proceso::esHoraDeTerminar(){
 
 void Proceso::imprimirMensaje(){
 	Mensaje* m = this->getMensaje();
-	write(1, &(m->nTareas), sizeof(&(m->nTareas)));
+	int tareas = m->nTareas;
+	int estadisticas = m->nEstadisticas;
+	write(1, &tareas, sizeof(tareas));
+	write(1, &estadisticas, sizeof(estadisticas));
+	for (int i=0; i<m->nTareas; ++i){
+		write(1, &(m->tareas[i]), sizeof(Tarea));
+		write(1, &(m->estadisticas[i]), sizeof(Estadistica));
+	}
+}
+
+void Proceso::leerMensaje(){
+	Mensaje msg;
+	int tareas, estadisticas;
+	read(0, &tareas, sizeof(tareas));
+	read(0, &estadisticas, sizeof(estadisticas));
+	msg.nTareas = tareas;
+	msg.nEstadisticas = estadisticas;
+	for(int i=0; i<tareas; ++i){
+		Tarea t; Estadistica e;
+		read(0, &t, sizeof(Tarea));
+		read(0, &e, sizeof(Estadistica));
+		msg.tareas[i] = t;
+		msg.estadisticas[i] = e;
+	}
+	this->setMensaje(&msg);
 }
