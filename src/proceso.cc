@@ -21,7 +21,7 @@ void Proceso::printMessagetoErr(){
 }
 
 bool Proceso::esHoraDeTerminar(){
-	printMessagetoErr();
+	//printMessagetoErr();
 	for(int i=0; i<mensaje->nTareas; ++i){
 		if(mensaje->estadisticas[i].procesoId == 0)
 			return false;

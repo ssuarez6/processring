@@ -38,6 +38,7 @@ void Pcp::inicializarHilos(){
 		h.ejecutar();
 		hilos[i] = &h;
 	}
+	imprimirEstadoHilos();
 }
 
 int Pcp::hiloDisponible(){
@@ -58,19 +59,19 @@ int Pcp::hiloTerminado(){
 }
 
 void Pcp::procesarMensaje(){
-	imprimirEstadoHilos();
 	int hiloId = hiloDisponible();
-	Mensaje m = *(this->getMensaje());
+	Mensaje* m = this->getMensaje();
 	if(hiloId<0) return;
-	for(int i=0; i<m.nTareas and hiloId>-1; ++i){
+	for(int i=0; i<m->nTareas and hiloId>-1; ++i){
 		cerr << "Hilo disponible: " << hiloId << endl;
-		if(!(m.tareas[i].asignado)){
+		if(!(m->tareas[i].asignado)){
 			cerr << "La tarea " << i << "no tiene asignacion" << endl;
-			hilos[hiloId]->asignarTarea(m.tareas[i], i);
-			m.tareas[i].asignado = true;
-			m.tareas[i].procesoId = id;
-			m.tareas[i].hiloId = hiloId;
-			cerr << "Asigne " << m.tareas[i].tareaAEjecutar <<
+			hilos[hiloId]->asignarTarea(m->tareas[i], i);
+			m->tareas[i].asignado = true;
+			m->tareas[i].procesoId = id;
+			m->tareas[i].hiloId = hiloId;
+			this->setMensaje(m);
+			cerr << "Asigne " << m->tareas[i].tareaAEjecutar <<
 				" al hilo " << hiloId;
 		}
 		hiloId = hiloDisponible();
@@ -122,9 +123,10 @@ void Pcp::imprimirEstadoHilos(){
 int main(int argc, char* argv[]){
 	Pcp* me = parseArgs(argc, argv);
 	me->inicializarHilos();
+	cerr << "Antes de leer el mensaje" <<endl;
+	//me->imprimirEstadoHilos();
 	me->leerMensaje();
 	//me->printMessagetoErr();
-	//me->imprimirEstadoHilos();
 	while(!me->esHoraDeTerminar()){
 		me->procesarMensaje();
 		cerr << "procesé el mensaje" << endl;
